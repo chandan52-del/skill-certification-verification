@@ -1,0 +1,91 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A user in the system (Student/Candidate, Training Institute, Employer/Recruiter, Admin)",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["student", "institute", "employer", "admin"] },
+        "profile_image": { "type": "string" },
+        "createdAt": { "type": "number" },
+        "updatedAt": { "type": "number" }
+      },
+      "required": ["name", "email", "role"]
+    },
+    "Institute": {
+      "title": "Institute",
+      "description": "Institute details linked to a user profile",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "institute_name": { "type": "string" },
+        "description": { "type": "string" },
+        "verification_status": { "type": "string", "enum": ["pending", "verified", "rejected"] },
+        "createdAt": { "type": "number" },
+        "updatedAt": { "type": "number" }
+      },
+      "required": ["userId", "institute_name", "verification_status"]
+    },
+    "Skill": {
+      "title": "Skill",
+      "description": "Pre-defined skills",
+      "type": "object",
+      "properties": {
+        "skill_name": { "type": "string" },
+        "category": { "type": "string" }
+      },
+      "required": ["skill_name", "category"]
+    },
+    "Certificate": {
+      "title": "Certificate",
+      "description": "A certificate issued to a student by an institute",
+      "type": "object",
+      "properties": {
+        "certificate_id": { "type": "string" },
+        "userId": { "type": "string" },
+        "skillId": { "type": "string" },
+        "instituteId": { "type": "string" },
+        "qr_code": { "type": "string" },
+        "issue_date": { "type": "number" },
+        "expiry_date": { "type": "number" },
+        "status": { "type": "string", "enum": ["verified", "expired", "revoked"] }
+      },
+      "required": ["certificate_id", "userId", "skillId", "instituteId", "issue_date", "status"]
+    },
+    "VerificationLog": {
+      "title": "Verification Log",
+      "description": "A log of certificate verification",
+      "type": "object",
+      "properties": {
+        "certificate_id": { "type": "string" },
+        "verified_by": { "type": "string" },
+        "timestamp": { "type": "number" }
+      },
+      "required": ["certificate_id", "timestamp"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Stores user profiles"
+    },
+    "institutes/{instituteId}": {
+      "schema": { "$ref": "#/entities/Institute" },
+      "description": "Stores institute additional details"
+    },
+    "skills/{skillId}": {
+      "schema": { "$ref": "#/entities/Skill" },
+      "description": "Stores system skills"
+    },
+    "certificates/{certificateId}": {
+      "schema": { "$ref": "#/entities/Certificate" },
+      "description": "Stores certificates issued to students"
+    },
+    "verificationLogs/{logId}": {
+      "schema": { "$ref": "#/entities/VerificationLog" },
+      "description": "Stores logs of certificate verifications"
+    }
+  }
+}
